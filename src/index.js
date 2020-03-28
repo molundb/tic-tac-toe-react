@@ -49,7 +49,8 @@ import './index.css';
       super(props);
       this.state = {
         history: [{
-          squares: Array(9).fill(null)
+          squares: Array(9).fill(null),
+          move: Array(2).fill(null),
         }],
         stepNumber: 0,
         xIsNext: true,
@@ -67,6 +68,7 @@ import './index.css';
       this.setState({
         history: history.concat([{
           squares: squares,
+          move: [i % 3, (i / 3) | 0],
         }]),
         stepNumber: history.length,
         xIsNext: !this.state.xIsNext,
@@ -87,7 +89,7 @@ import './index.css';
 
       const moves = history.map((step, move) => {
         const desc = move ?
-          'Go to move #' + move :
+          'Go to move #' + move + ' ' + step.move:
           'Go to game start'
           return (
             <li key={move}>
