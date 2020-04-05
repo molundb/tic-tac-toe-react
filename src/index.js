@@ -131,7 +131,7 @@ class Game extends React.Component {
                 <div className="game-board">
                     <Board
                         squares={current.squares}
-                        onClick={i => this.handleClick(i)}
+                        onClick={(i) => this.handleClick(i)}
                     />
                 </div>
                 <div className="game-info">
@@ -143,7 +143,7 @@ class Game extends React.Component {
                     >
                         Reverse move order
                     </button>
-                    <ol>{moves}</ol>
+                    <ol reversed={this.state.movesDescending}>{moves}</ol>
                 </div>
             </div>
         )
