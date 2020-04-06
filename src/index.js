@@ -3,8 +3,13 @@ import ReactDOM from 'react-dom'
 import './index.css'
 
 function Square(props) {
+    let className = 'square'
+    if (props.winner) {
+        className += ' square-winner'
+    }
+
     return (
-        <button className="square" onClick={props.onClick}>
+        <button className={className} onClick={props.onClick}>
             {props.value}
         </button>
     )
@@ -14,6 +19,7 @@ class Board extends React.Component {
     renderSquare(i) {
         return (
             <Square
+                winner={this.props.winnerSquares?.includes(i)}
                 value={this.props.squares[i]}
                 onClick={() => this.props.onClick(i)}
             />
@@ -60,9 +66,11 @@ class Game extends React.Component {
         const history = this.state.history.slice(0, this.state.stepNumber + 1)
         const current = history[history.length - 1]
         const squares = current.squares.slice()
+
         if (calculateWinner(squares) || squares[i]) {
             return
         }
+
         squares[i] = this.state.xIsNext ? 'X' : 'O'
         this.setState({
             history: history.concat([
@@ -92,7 +100,12 @@ class Game extends React.Component {
     render() {
         const history = this.state.history
         const current = history[this.state.stepNumber]
-        const winner = calculateWinner(current.squares)
+        const winnerSquares = calculateWinner(current.squares)
+
+        let winner
+        if (winnerSquares != null) {
+            winner = current.squares[winnerSquares[0]]
+        }
 
         let moves = history.map((step, moveNumber) => {
             var desc = moveNumber
@@ -130,6 +143,7 @@ class Game extends React.Component {
             <div className="game">
                 <div className="game-board">
                     <Board
+                        winnerSquares={winnerSquares}
                         squares={current.squares}
                         onClick={(i) => this.handleClick(i)}
                     />
@@ -172,7 +186,7 @@ function calculateWinner(squares) {
             squares[a] === squares[b] &&
             squares[a] === squares[c]
         ) {
-            return squares[a]
+            return [a, b, c]
         }
     }
     return null
